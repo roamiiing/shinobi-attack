@@ -42,6 +42,7 @@ const client = new Client({
 client.connect();
 
 client.on("message", (channel, tags, message, self) => {
+  console.log(tags);
   const words = message.split(/\s+/);
 
   const currentUserNickname = tags["display-name"];
@@ -52,7 +53,7 @@ client.on("message", (channel, tags, message, self) => {
 
   switch (command) {
     case Commands.Spawn: {
-      game.addPlayer(currentUserNickname);
+      game.addPlayer(currentUserNickname, tags["vip"], tags["subscriber"]);
       break;
     }
     case Commands.Attack: {
@@ -68,14 +69,17 @@ const SAFE_X_OFFSET = 100;
 
 class Player {
   nickname;
+  sprite;
 
   walkingTo;
   walkingDirection = 0;
 
   x;
 
-  constructor(nickname) {
+  constructor(nickname, sprite) {
     this.nickname = nickname;
+    this.sprite = sprite;
+
     this.x = p5.random(SAFE_X_OFFSET, p5.width - SAFE_X_OFFSET);
   }
 
@@ -101,7 +105,7 @@ class Player {
     if (this.walkingTo !== undefined) {
       this.walk();
     } else {
-      sprites.shinobi.idle.show(0, 0);
+      this.sprite.idle.show(0, 0);
 
       this.decideOnWalking();
     }
@@ -133,7 +137,7 @@ class Player {
       return;
     }
 
-    sprites.shinobi.walk.show(0, 0, this.walkingDirection === 0);
+    this.sprite.walk.show(0, 0, this.walkingDirection === 0);
 
     this.x += 0.5 * this.walkingDirection === 0 ? -1 : 1;
   }
@@ -149,10 +153,16 @@ class Game {
     this.players.forEach((player) => player.show());
   }
 
-  addPlayer(nickname) {
+  addPlayer(nickname, isVip, isSubscriber) {
     if (this.players.find((player) => player.nickname === nickname)) return;
 
-    this.players.push(new Player(nickname));
+    const sprite = isSubscriber
+      ? sprites.samurai
+      : isVip
+        ? sprites.shinobi
+        : sprites.fighter;
+
+    this.players.push(new Player(nickname, sprite));
 
     setTimeout(
       () => {

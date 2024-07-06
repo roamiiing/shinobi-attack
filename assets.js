@@ -57,6 +57,16 @@ import shinobiIdle from "./assets/Shinobi/Idle.png";
 import shinobiWalk from "./assets/Shinobi/Walk.png";
 import shinobiRun from "./assets/Shinobi/Run.png";
 
+import fighterAttack from "./assets/Fighter/Attack_1.png";
+import fightersIdle from "./assets/Fighter/Idle.png";
+import fightersWalk from "./assets/Fighter/Walk.png";
+import fightersRun from "./assets/Fighter/Run.png";
+
+import samuraiAttack from "./assets/Samurai/Attack_1.png";
+import samuraiIdle from "./assets/Samurai/Idle.png";
+import samuraiWalk from "./assets/Samurai/Walk.png";
+import samuraiRun from "./assets/Samurai/Run.png";
+
 export let sprites;
 
 // needs to be loaded in p5.setup
@@ -67,6 +77,20 @@ export function loadSprites() {
       idle: createSprite(shinobiIdle, 6),
       walk: createSprite(shinobiWalk, 8),
       run: createSprite(shinobiRun, 8),
+    },
+
+    fighter: {
+      attack: createSprite(fighterAttack, 4),
+      idle: createSprite(fightersIdle, 6),
+      walk: createSprite(fightersWalk, 8),
+      run: createSprite(fightersRun, 8),
+    },
+
+    samurai: {
+      attack: createSprite(samuraiAttack, 6),
+      idle: createSprite(samuraiIdle, 6),
+      walk: createSprite(samuraiWalk, 8),
+      run: createSprite(samuraiRun, 8),
     },
   };
 }
