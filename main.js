@@ -130,6 +130,8 @@ class Player {
   }
 
   startWalking() {
+    this.isRunning = false;
+
     this.walkingTo = Math.floor(
       random(SAFE_X_OFFSET, p5.width - SAFE_X_OFFSET),
     );
