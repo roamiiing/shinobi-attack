@@ -53,7 +53,7 @@ client.on("message", (channel, tags, message, self) => {
 
   switch (command) {
     case Commands.Spawn: {
-      game.addPlayer(currentUserNickname, tags["vip"], tags["subscriber"]);
+      game.addPlayer(currentUserNickname, tags);
       break;
     }
     case Commands.Attack: {
@@ -73,6 +73,7 @@ class Player {
 
   walkingTo;
   walkingDirection = 0;
+  isRunning = false;
 
   x;
 
@@ -116,13 +117,28 @@ class Player {
   decideOnWalking() {
     if (this.walkingTo) return;
 
-    if (p5.random() >= 0.001) return;
+    const random = p5.random();
 
+    if (random <= 0.001) {
+      this.startWalking();
+      return;
+    } else if (random <= 0.002) {
+      this.startRunning();
+      return;
+    }
+  }
+
+  startWalking() {
     this.walkingTo = Math.floor(
       p5.random(SAFE_X_OFFSET, p5.width - SAFE_X_OFFSET),
     );
 
     this.walkingDirection = this.walkingTo > this.x ? 1 : 0;
+  }
+
+  startRunning() {
+    this.startWalking();
+    this.isRunning = true;
   }
 
   walk() {
@@ -137,10 +153,26 @@ class Player {
       return;
     }
 
-    this.sprite.walk.show(0, 0, this.walkingDirection === 0);
+    const sprite = this.isRunning ? this.sprite.run : this.sprite.walk;
 
-    this.x += 0.5 * this.walkingDirection === 0 ? -1 : 1;
+    sprite.show(0, 0, this.walkingDirection === 0);
+
+    const speed = this.isRunning ? 5 : 1;
+
+    this.x += speed * (this.walkingDirection === 0 ? -1 : 1);
   }
+}
+
+function getSprite(tags) {
+  if (tags.subscriber || tags.mod) {
+    return sprites.samurai;
+  }
+
+  if (tags.vip) {
+    return sprites.shinobi;
+  }
+
+  return sprites.fighter;
 }
 
 class Game {
@@ -153,14 +185,10 @@ class Game {
     this.players.forEach((player) => player.show());
   }
 
-  addPlayer(nickname, isVip, isSubscriber) {
+  addPlayer(nickname, tags) {
     if (this.players.find((player) => player.nickname === nickname)) return;
 
-    const sprite = isSubscriber
-      ? sprites.samurai
-      : isVip
-        ? sprites.shinobi
-        : sprites.fighter;
+    const sprite = getSprite(tags);
 
     this.players.push(new Player(nickname, sprite));
 

@@ -3,15 +3,17 @@ import { p5 } from "./p5";
 export class Sprite {
   image;
   frames;
+  baseSpeed;
   static index = 0;
 
-  constructor(image, frames) {
+  constructor(image, frames, baseSpeed) {
     this.image = image;
-    this.frames = frames;
+    this.frames = frames ?? [];
+    this.baseSpeed = baseSpeed ?? 1;
   }
 
   show(x, y, reverseX = false) {
-    let index = Math.floor(Sprite.index) % this.frames;
+    let index = Math.floor(Sprite.index * this.baseSpeed) % this.frames;
 
     const image = reverseX ? this.image : this.image;
 
@@ -45,11 +47,11 @@ export class Sprite {
 
 const SPRITE_SIZE = 128;
 
-function createSprite(url, frames) {
+function createSprite(url, frames, baseSpeed) {
   const image = p5.loadImage(url);
   image.resize(SPRITE_SIZE * frames, SPRITE_SIZE);
 
-  return new Sprite(image, frames);
+  return new Sprite(image, frames, baseSpeed);
 }
 
 import shinobiAttack from "./assets/Shinobi/Attack_1.png";
@@ -76,21 +78,21 @@ export function loadSprites() {
       attack: createSprite(shinobiAttack, 5),
       idle: createSprite(shinobiIdle, 6),
       walk: createSprite(shinobiWalk, 8),
-      run: createSprite(shinobiRun, 8),
+      run: createSprite(shinobiRun, 8, 5),
     },
 
     fighter: {
       attack: createSprite(fighterAttack, 4),
       idle: createSprite(fightersIdle, 6),
       walk: createSprite(fightersWalk, 8),
-      run: createSprite(fightersRun, 8),
+      run: createSprite(fightersRun, 8, 5),
     },
 
     samurai: {
       attack: createSprite(samuraiAttack, 6),
       idle: createSprite(samuraiIdle, 6),
       walk: createSprite(samuraiWalk, 8),
-      run: createSprite(samuraiRun, 8),
+      run: createSprite(samuraiRun, 8, 5),
     },
   };
 }
