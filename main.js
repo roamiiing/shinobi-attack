@@ -2,6 +2,7 @@ import "./style.css";
 
 import { Client } from "tmi.js";
 import { p5 } from "./p5";
+import { random } from "./utils";
 
 import { Sprite, loadSprites, sprites } from "./assets";
 
@@ -81,7 +82,7 @@ class Player {
     this.nickname = nickname;
     this.sprite = sprite;
 
-    this.x = p5.random(SAFE_X_OFFSET, p5.width - SAFE_X_OFFSET);
+    this.x = random(SAFE_X_OFFSET, p5.width - SAFE_X_OFFSET);
   }
 
   attack() {
@@ -117,12 +118,12 @@ class Player {
   decideOnWalking() {
     if (this.walkingTo) return;
 
-    const random = p5.random();
+    const chance = random();
 
-    if (random <= 0.001) {
+    if (chance <= 0.001) {
       this.startWalking();
       return;
-    } else if (random <= 0.002) {
+    } else if (chance <= 0.002) {
       this.startRunning();
       return;
     }
@@ -130,7 +131,7 @@ class Player {
 
   startWalking() {
     this.walkingTo = Math.floor(
-      p5.random(SAFE_X_OFFSET, p5.width - SAFE_X_OFFSET),
+      random(SAFE_X_OFFSET, p5.width - SAFE_X_OFFSET),
     );
 
     this.walkingDirection = this.walkingTo > this.x ? 1 : 0;
