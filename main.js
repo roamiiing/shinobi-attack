@@ -208,6 +208,17 @@ class Game {
   }
 }
 
+function spawnRandomPlayers() {
+  for (const nickname of [
+    "подспичник",
+    "подписечник",
+    "подписячка",
+    "подписоска",
+  ]) {
+    game.addPlayer(nickname, { subscriber: true });
+  }
+}
+
 const game = new Game();
 
 window.game = game;
@@ -218,6 +229,10 @@ p5.preload = () => {
 
 p5.setup = () => {
   p5.createCanvas(p5.windowWidth, p5.windowHeight);
+
+  setInterval(spawnRandomPlayers, 10 * 60 * 1000);
+
+  spawnRandomPlayers();
 };
 
 p5.draw = () => {
